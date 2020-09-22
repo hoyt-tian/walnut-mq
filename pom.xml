@@ -9,10 +9,13 @@
     <packaging>pom</packaging>
     <version>${revision}</version>
     <modules>
+        <module>walnut-mq-broker</module>
+        <module>walnut-mq-client</module>
+        <module>walnut-mq-common</module>
     </modules>
 
     <properties>
-        <revision>0.0.1</revision>
+        <revision>0.0.1-SNAPSHOT</revision>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -25,10 +28,17 @@
         <maven.jar.plugin.version>2.2</maven.jar.plugin.version>
         <walnut.version>0.0.1-SNAPSHOT</walnut.version>
         <netty.version>4.1.52.Final</netty.version>
+        <flatten.maven.plugin.version>1.2.5</flatten.maven.plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.hao</groupId>
+                <artifactId>walnut-mq-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.hao</groupId>
                 <artifactId>walnut-log</artifactId>
@@ -78,12 +88,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.hao</groupId>
-            <artifactId>walnut-log</artifactId>
-            <version>${walnut.version}</version>
         </dependency>
     </dependencies>
 
@@ -158,6 +162,31 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten.maven.plugin.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
