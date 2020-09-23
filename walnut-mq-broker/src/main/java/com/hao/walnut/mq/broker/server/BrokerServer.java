@@ -1,36 +1,27 @@
 package com.hao.walnut.mq.broker.server;
 
-import com.hao.walnut.mq.broker.server.request.ProduceRequest;
-import com.hao.walnut.mq.common.client.Consumer;
-import com.hao.walnut.mq.common.client.Producer;
+
+import com.hao.walnut.mq.broker.server.netty.BrokerChannelInitialnizer;
+import com.hao.walnut.mq.broker.server.netty.BrokerChannelInitialnizerConf;
+import com.hao.walnut.mq.broker.server.netty.handler.MqProtocolInboundHandler;
+import com.hao.walnut.mq.common.codec.ProtocolEncoder;
+import com.hao.walnut.mq.common.netty.NettyServer;
+import com.hao.walnut.mq.common.netty.NettyServerConf;
 
 public class BrokerServer {
-    BrokerConf brokerConf;
-    public BrokerServer(BrokerConf brokerConf) {
-        this.brokerConf = brokerConf;
+    NettyServer nettyServer;
+    public BrokerServer() {
+        NettyServerConf nettyServerConf = new NettyServerConf();
+        nettyServerConf.setPort(10800);
+
+        BrokerChannelInitialnizerConf brokerChannelInitialnizerConf = new BrokerChannelInitialnizerConf();
+        brokerChannelInitialnizerConf.setProtocolEncoder(new ProtocolEncoder());
+
+        nettyServerConf.setChildChannelInitializer(new BrokerChannelInitialnizer(brokerChannelInitialnizerConf));
+        nettyServer = new NettyServer(nettyServerConf);
     }
 
     public void start() {
-
-    }
-
-    protected void onProducerConnected(Producer producer) {
-
-    }
-
-    protected void onProducerDisconnect(Producer producer) {
-
-    }
-
-    protected void onProduce(ProduceRequest produceRequest) {
-
-    }
-
-    protected void onConsumerConnected(Consumer consumer) {
-
-    }
-
-    protected void onConsumerDisconnected(Consumer consumer) {
-
+        nettyServer.start();
     }
 }
