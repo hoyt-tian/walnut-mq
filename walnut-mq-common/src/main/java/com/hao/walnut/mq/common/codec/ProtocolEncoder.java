@@ -10,7 +10,20 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class ProtocolEncoder extends MessageToByteEncoder<Protocol> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Protocol frame, ByteBuf byteBuf) throws Exception {
-//        byteBuf.writeBytes(mqProtocol.toByteBuffer());
-        frame.writeInto(byteBuf);
+        byte[] payload = frame.getPayload();
+        int payloadSize = payload != null ? payload.length : 0;
+        byteBuf.capacity(4 + 4 + 8 + 8 + 4 + payloadSize);
+        byteBuf.writeInt(Protocol.MAGIC);
+        byteBuf.writeByte(frame.getVersion());
+        byteBuf.writeByte(frame.getExtra());
+        byteBuf.writeShort(frame.getCode());
+        byteBuf.writeLong(frame.getSeq());
+        byteBuf.writeLong(frame.getSendTime());
+        byteBuf.writeInt(payloadSize);
+
+        if (payloadSize > 0) {
+            byteBuf.writeBytes(payload);
+        }
     }
+
 }

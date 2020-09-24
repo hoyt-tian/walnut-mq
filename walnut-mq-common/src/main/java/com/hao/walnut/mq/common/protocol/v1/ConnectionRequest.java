@@ -1,12 +1,11 @@
 package com.hao.walnut.mq.common.protocol.v1;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class ConnectionRequest extends MqV1Protocol{
+public class ConnectionRequest extends MqV1Request{
     @Getter
     protected String appName;
 
@@ -14,9 +13,9 @@ public class ConnectionRequest extends MqV1Protocol{
     protected String secret;
 
     public ConnectionRequest(String appName, String secret) {
+        super((short)Code.conn_producer.ordinal());
         this.appName = appName;
         this.secret = secret;
-
         byte[] appNameBytes = appName.getBytes();
         byte[] secretBytes = secret.getBytes();
         ByteBuffer byteBuffer = ByteBuffer.allocate(4 + appNameBytes.length + 4 + secretBytes.length);
@@ -28,7 +27,7 @@ public class ConnectionRequest extends MqV1Protocol{
         this.setPayload(byteBuffer.array());
     }
 
-    public ConnectionRequest(MqV1Protocol mqProtocol) {
+    public ConnectionRequest(MqV1Request mqProtocol) {
         super(mqProtocol);
         byte[] paylod = this.getPayload();
         ByteBuffer byteBuffer = ByteBuffer.wrap(paylod);

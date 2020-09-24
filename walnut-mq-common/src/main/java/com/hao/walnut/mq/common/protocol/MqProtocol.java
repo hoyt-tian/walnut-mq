@@ -2,7 +2,7 @@ package com.hao.walnut.mq.common.protocol;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MqProtocol implements Protocol{
+public class MqProtocol implements Request, Response{
     static final AtomicLong SeqIdGenerator = new AtomicLong(1);
     byte version;
     protected byte extra;
@@ -28,6 +28,11 @@ public class MqProtocol implements Protocol{
     @Override
     public short getCode() {
         return code;
+    }
+
+    @Override
+    public void setCode(short code) {
+        this.code = code;
     }
 
     @Override

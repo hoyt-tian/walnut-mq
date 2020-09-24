@@ -6,14 +6,17 @@ import com.hao.walnut.mq.common.protocol.Protocol;
 public class MqV1Protocol implements Protocol {
     static final byte Version = 0x01;
     public enum Code {
-        Req_Conn_Producer,
-        Req_Conn_Consumer;
+        heartbeat,
+        conn_producer,
+        conn_consumer,
+        production,
     }
 
     protected Protocol mqProtocol;
 
-    protected MqV1Protocol() {
+    protected MqV1Protocol(short code) {
         this(new MqProtocol(MqV1Protocol.Version));
+        this.setCode(code);
     }
     public MqV1Protocol(Protocol mqProtocol) {
         this.mqProtocol = mqProtocol;
@@ -32,6 +35,11 @@ public class MqV1Protocol implements Protocol {
     @Override
     public short getCode() {
         return mqProtocol.getCode();
+    }
+
+    @Override
+    public void setCode(short code) {
+        mqProtocol.setCode(code);
     }
 
     @Override

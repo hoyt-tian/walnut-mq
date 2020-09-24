@@ -8,4 +8,5 @@ import lombok.Setter;
 public class BrokerChannelInitialnizerConf {
     ProtocolEncoder protocolEncoder;
     EventExecutorGroup eventExecutorGroup;
+    int idleTimeout = 60 * 60;
 }

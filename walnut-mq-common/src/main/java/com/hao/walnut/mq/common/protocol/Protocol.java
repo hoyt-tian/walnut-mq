@@ -9,6 +9,7 @@ public interface Protocol {
     byte getVersion();
     byte getExtra();
     short getCode();
+    void setCode(short code);
     long getSeq();
     long getSendTime();
     byte[] getPayload();
@@ -23,19 +24,6 @@ public interface Protocol {
 //    default boolean isResponse() {
 //        return !isRequest();
 //    }
-
-    default void writeInto(ByteBuf byteBuf) {
-        byte[] payload = getPayload();
-        byteBuf.capacity(4 + 4 + 8 + 8 + 4 + payload.length);
-        byteBuf.writeInt(MAGIC);
-        byteBuf.writeByte(getVersion());
-        byteBuf.writeByte(getExtra());
-        byteBuf.writeShort(getCode());
-        byteBuf.writeLong(getSeq());
-        byteBuf.writeLong(getSendTime());
-        byteBuf.writeInt(payload.length);
-        byteBuf.writeBytes(payload);
-    }
 
     static MqProtocol from(ByteBuf byteBuf) {
         int magic = byteBuf.readInt();
