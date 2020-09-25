@@ -30,7 +30,7 @@ public class BrokerChannelInitialnizer extends ChannelInitializer<SocketChannel>
                 .addLast(new ConnectionHandler())
                 .addLast(new IdleHandler())
                 .addLast(new HeartbeatHandler())
-                .addLast(new ProductionHandler())
+                .addLast(new ProductionHandler(brokerChannelInitialnizerConf.logFileServer))
 //        .addLast(brokerChannelInitialnizerConf.eventExecutorGroup, new MqProtocolInboundHandler());
         ;
     }

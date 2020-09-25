@@ -11,19 +11,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductionHandler extends SimpleUserEventChannelHandler<ProductionRequest> {
     LogFileServer logFileServer;
+
+    public ProductionHandler(LogFileServer logFileServer) {
+        this.logFileServer = logFileServer;
+    }
+
     @Override
     protected void eventReceived(ChannelHandlerContext ctx, ProductionRequest evt) throws Exception {
         log.info("receive production request from client");
         Message message = evt.getMessage();
         String fileName = message.getTopic();
         // 消息数据落盘
-        long offset = logFileServer.append(fileName, evt.getPayload());
-        ProductionResponse productionResponse = new ProductionResponse();
+        long msgId = logFileServer.append(fileName, evt.getPayload());
+        ProductionResponse productionResponse = new ProductionResponse(msgId);
         productionResponse.setSeq(evt.getSeq());
-        log.info("send production response");
+        productionResponse.setSendTime(System.currentTimeMillis());
         ctx.writeAndFlush(productionResponse);
+        log.info("send msgId {}", msgId);
 
         // 存储track信息
-        logFileServer.append(fileName + "track", "".getBytes());
+//        logFileServer.append(fileName + "track", "".getBytes());
     }
 }

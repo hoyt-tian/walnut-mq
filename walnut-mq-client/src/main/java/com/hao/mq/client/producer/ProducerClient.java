@@ -17,7 +17,9 @@ import java.util.concurrent.Future;
 @Slf4j
 public class ProducerClient  implements Client {
     NettyClient nettyClient;
-    public ProducerClient() throws InterruptedException {
+    public ProducerClient(String rServerUrl) throws InterruptedException {
+        rServerUrl = rServerUrl == null ? "10.222.54.248:2181" : rServerUrl;
+
         NettyClientConf nettyClientConf = new NettyClientConf();
         nettyClientConf.setPort(10800);
         nettyClientConf.setHost("127.0.0.1");
@@ -27,6 +29,10 @@ public class ProducerClient  implements Client {
         nettyClient = new NettyClient(nettyClientConf);
         productionChannelInitialnizerConf.productionCallback = nettyClient::resolve;
         nettyClient.start();
+
+    }
+
+    public void start() throws InterruptedException {
 
         ConnectionRequest request = new ConnectionRequest("testAppName", "sectrects");
         log.info("prepare send request");
@@ -38,11 +44,9 @@ public class ProducerClient  implements Client {
         message.setTopic("testTopic");
         message.setData("hello message".getBytes());
         send(message);
-        channel.closeFuture().sync();
-    }
 
-    public void start() throws InterruptedException {
-        nettyClient.start();
+
+        channel.closeFuture().sync();
     }
 
     public void send(Message message) {
@@ -50,7 +54,7 @@ public class ProducerClient  implements Client {
         Future<Response> promise = nettyClient.request(productionRequest);
         try {
             ProductionResponse response = (ProductionResponse) promise.get();
-            log.info("response ", response);
+            log.info("response msgId {}", response.getMsgId());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
