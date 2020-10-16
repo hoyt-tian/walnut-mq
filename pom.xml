@@ -12,6 +12,7 @@
         <module>walnut-mq-broker</module>
         <module>walnut-mq-client</module>
         <module>walnut-mq-common</module>
+        <module>walnut-mq-file</module>
     </modules>
 
     <properties>
@@ -42,7 +43,13 @@
 
             <dependency>
                 <groupId>com.hao</groupId>
-                <artifactId>walnut-log</artifactId>
+                <artifactId>walnut-mapfile</artifactId>
+                <version>${walnut.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.hao</groupId>
+                <artifactId>walnut-mq-file</artifactId>
                 <version>${walnut.version}</version>
             </dependency>
 

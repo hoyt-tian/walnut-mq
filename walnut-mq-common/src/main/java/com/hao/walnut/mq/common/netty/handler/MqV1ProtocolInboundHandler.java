@@ -13,10 +13,11 @@ public class MqV1ProtocolInboundHandler extends SimpleChannelInboundHandler<MqV1
             case heartbeat:
                 return new HeartbeatRequest(msg);
             case conn_producer:
-                return new ConnectionRequest(msg);
+                return new ProducerConnectionRequest(msg);
             case production:
                 return new ProductionRequest(msg);
             case conn_consumer:
+                return new ConsumerConnectionRequest(msg);
             default:
                 return null;
         }
@@ -27,7 +28,7 @@ public class MqV1ProtocolInboundHandler extends SimpleChannelInboundHandler<MqV1
             case heartbeat:
                 return new HeartbeatResponse(msg);
             case conn_producer:
-                return new ConnectionResponse(msg);
+                return new ConsumerConnectionResponse(msg);
             case production:
                 return new ProductionResponse(msg);
             case conn_consumer:

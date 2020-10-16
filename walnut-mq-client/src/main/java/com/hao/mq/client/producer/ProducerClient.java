@@ -6,11 +6,13 @@ import com.hao.walnut.mq.common.netty.NettyClient;
 import com.hao.walnut.mq.common.netty.NettyClientConf;
 import com.hao.walnut.mq.common.protocol.Response;
 import com.hao.walnut.mq.common.protocol.v1.ConnectionRequest;
+import com.hao.walnut.mq.common.protocol.v1.ProducerConnectionRequest;
 import com.hao.walnut.mq.common.protocol.v1.ProductionRequest;
 import com.hao.walnut.mq.common.protocol.v1.ProductionResponse;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -34,7 +36,7 @@ public class ProducerClient  implements Client {
 
     public void start() throws InterruptedException {
 
-        ConnectionRequest request = new ConnectionRequest("testAppName", "sectrects");
+        ConnectionRequest request = new ProducerConnectionRequest("testAppName", "sectrects");
         log.info("prepare send request");
         Channel channel = nettyClient.getChannelFuture().channel();
         request.setSendTime(System.currentTimeMillis());
@@ -50,6 +52,10 @@ public class ProducerClient  implements Client {
     }
 
     public void send(Message message) {
+        if (message.getProperties() == null) {
+            message.setProperties(new HashMap<>());
+        }
+        message.getProperties().put(Message.TS_SEND, String.valueOf(System.currentTimeMillis()));
         ProductionRequest productionRequest = new ProductionRequest(message);
         Future<Response> promise = nettyClient.request(productionRequest);
         try {

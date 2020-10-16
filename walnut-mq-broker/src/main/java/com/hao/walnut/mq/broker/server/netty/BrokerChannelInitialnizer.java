@@ -1,9 +1,6 @@
 package com.hao.walnut.mq.broker.server.netty;
 
-import com.hao.walnut.mq.broker.server.netty.handler.ConnectionHandler;
-import com.hao.walnut.mq.broker.server.netty.handler.HeartbeatHandler;
-import com.hao.walnut.mq.broker.server.netty.handler.IdleHandler;
-import com.hao.walnut.mq.broker.server.netty.handler.ProductionHandler;
+import com.hao.walnut.mq.broker.server.netty.handler.*;
 import com.hao.walnut.mq.common.codec.ProtocolDecoder;
 import com.hao.walnut.mq.common.netty.handler.MqProtocolInboundHandler;
 import com.hao.walnut.mq.common.netty.handler.MqV1ProtocolInboundHandler;
@@ -27,10 +24,11 @@ public class BrokerChannelInitialnizer extends ChannelInitializer<SocketChannel>
                 .addLast(new ProtocolDecoder())
                 .addLast(new MqProtocolInboundHandler())
                 .addLast(new MqV1ProtocolInboundHandler())
-                .addLast(new ConnectionHandler())
+                .addLast(new ProducerConnectionHandler())
+                .addLast(new ConsumerConnectionHandler(brokerChannelInitialnizerConf.brokerServer))
                 .addLast(new IdleHandler())
                 .addLast(new HeartbeatHandler())
-                .addLast(new ProductionHandler(brokerChannelInitialnizerConf.logFileServer))
+                .addLast(new ProductionHandler(brokerChannelInitialnizerConf.brokerServer))
 //        .addLast(brokerChannelInitialnizerConf.eventExecutorGroup, new MqProtocolInboundHandler());
         ;
     }

@@ -12,14 +12,15 @@
     <artifactId>walnut-mq-broker</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.hao</groupId>
-            <artifactId>walnut-log</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.hao</groupId>
             <artifactId>walnut-mq-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hao</groupId>
+            <artifactId>walnut-mq-file</artifactId>
         </dependency>
 
         <dependency>
@@ -39,6 +40,12 @@
         <dependency>
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

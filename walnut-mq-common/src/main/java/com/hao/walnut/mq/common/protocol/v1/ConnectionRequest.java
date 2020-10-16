@@ -5,15 +5,15 @@ import lombok.Getter;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class ConnectionRequest extends MqV1Request{
+public abstract class ConnectionRequest extends MqV1Request{
     @Getter
     protected String appName;
 
     @Getter
     protected String secret;
 
-    public ConnectionRequest(String appName, String secret) {
-        super((short)Code.conn_producer.ordinal());
+    public ConnectionRequest(short code, String appName, String secret) {
+        super(code);
         this.appName = appName;
         this.secret = secret;
         byte[] appNameBytes = appName.getBytes();
